@@ -3,10 +3,10 @@
 
 main() ->
     {ok, [Iterations]} = io:fread("", "~d"),
-    addrev(0, Iterations).
+    io:fwrite("~s~n", [addrev(0, Iterations, [])]).
 
-addrev(Current, Iterations) when Current =:= Iterations -> exit;
-addrev(Current, Iterations) ->
+addrev(Current, Iterations, PartialResult) when Current =:= Iterations -> string:join(lists:reverse(PartialResult), "\n");
+addrev(Current, Iterations, PartialResult) ->
     % Read
     {ok, [FirstString, SecondString]} = io:fread("", "~s ~s"),
     % Reverse
@@ -21,6 +21,5 @@ addrev(Current, Iterations) ->
     ReversedSum = lists:reverse(SumString),
     % Converting from string to integer makes it unecessary to check for leading zeros.
     {Result, _} = string:to_integer(ReversedSum),
-    io:fwrite("~p~n", [Result]),
     % Loop
-    addrev(Current + 1, Iterations).
+    addrev(Current + 1, Iterations, [integer_to_list(Result)|PartialResult]).
